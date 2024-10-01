@@ -5,9 +5,9 @@ const router = express.Router();
 /* ************************************************************************* */
 // Define Your API Routes Here
 /* ************************************************************************* */
-
-import itemActions from "./modules/item/itemActions";
 import adActions from "./modules/ad/adActions";
+import candidateActions from "./modules/candidate/candidateActions";
+import itemActions from "./modules/item/itemActions";
 
 // Define item-related routes
 router.get("/api/items", itemActions.browse);
@@ -20,6 +20,13 @@ router.get("/api/ads/:id", adActions.read);
 router.post("/api/ads", adActions.add);
 router.put("/api/ads/:id", adActions.edit);
 router.delete("/api/ads/:id", adActions.destroy);
+
+// Define candidate-related routes
+router.get("/api/candidates", candidateActions.browse);
+router.get("/api/candidates/:id", candidateActions.read);
+router.post("/api/candidates", candidateActions.add);
+router.put("/api/candidates/:id", candidateActions.edit);
+router.delete("/api/candidates/:id", candidateActions.destroy);
 
 /* ************************************************************************* */
 
