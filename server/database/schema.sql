@@ -63,3 +63,8 @@ INSERT INTO ad (title, picture, description, location, company_id, contract_id, 
 ("Développeur Full Stack", "image", "Poste de développeur full stack avec expérience en Node.js et React.", "Paris, France", 1, 2, 1),
 ("Data Scientist", "https://exemple.com/images/datascientist.jpg", "Poste de Data Scientist pour analyser des données volumineuses et complexes.", "Lyon, France", 2, 3, 2);
 
+create table user (
+  id int unsigned primary key auto_increment not null,
+  email varchar(255) not null unique,
+  password varchar(255) not null
+);
