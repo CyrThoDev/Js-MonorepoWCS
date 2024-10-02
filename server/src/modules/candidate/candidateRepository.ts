@@ -41,6 +41,17 @@ class CandidateRepository {
     return rows[0] as Candidate;
   }
 
+  async readByEmail(email: string) {
+    // Execute the SQL SELECT query to retrieve a specific candidate by its ID
+    const [rows] = await databaseClient.query<Rows>(
+      "select * from candidate where email = ?",
+      [email],
+    );
+
+    // Return the first row of the result, which represents the candidate
+    return rows[0] as Candidate;
+  }
+
   async readAll() {
     // Execute the SQL SELECT query to retrieve all candidates from the "candidate" table
     const [rows] = await databaseClient.query<Rows>("select * from candidate");

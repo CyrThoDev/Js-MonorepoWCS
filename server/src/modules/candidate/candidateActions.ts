@@ -87,4 +87,12 @@ const destroy: RequestHandler = async (req, res, next) => {
   }
 };
 
-export default { browse, read, add, edit, destroy };
+const login: RequestHandler = async (req, res, next) => {
+  try {
+    res.sendStatus(200);
+  } catch (err) {
+    next(err);
+  }
+};
+
+export default { browse, read, add, edit, destroy, login };
