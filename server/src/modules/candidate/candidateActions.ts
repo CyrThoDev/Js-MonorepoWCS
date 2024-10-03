@@ -89,7 +89,9 @@ const destroy: RequestHandler = async (req, res, next) => {
 
 const login: RequestHandler = async (req, res, next) => {
   try {
-    res.sendStatus(200);
+    res.cookie("token", req.token).json({
+      message: "Vous êtes connecté",
+    });
   } catch (err) {
     next(err);
   }

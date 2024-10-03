@@ -33,6 +33,7 @@ router.post(
   "/api/login",
   auth.checkIfUserExists,
   auth.verifyPassword,
+  auth.createToken,
   candidateActions.login,
 );
 

@@ -1,5 +1,6 @@
 import * as argon2 from "argon2";
 import type { RequestHandler } from "express";
+import jwt from "jsonwebtoken";
 import candidateRepository from "../modules/candidate/candidateRepository";
 
 const hashPassword: RequestHandler = async (req, res, next) => {
@@ -29,8 +30,11 @@ const checkIfUserExists: RequestHandler = async (req, res, next) => {
 
 const verifyPassword: RequestHandler = async (req, res, next) => {
   try {
+    if (!req.body.password) {
+      return res.status(400).send("Veuillez entrer votre mot de passe");
+    }
     if (!req.candidate) {
-      return res.sendStatus(400);
+      throw new Error();
     }
     const result = await argon2.verify(
       req.candidate.password,
@@ -43,4 +47,25 @@ const verifyPassword: RequestHandler = async (req, res, next) => {
   }
 };
 
-export default { verifyPassword, hashPassword, checkIfUserExists };
+const createToken: RequestHandler = async (req, res, next) => {
+  try {
+    if (!req.candidate) {
+      return res.sendStatus(400);
+    }
+    if (!process.env.APP_SECRET) {
+      throw new Error();
+    }
+    const token = jwt.sign(req.candidate, process.env.APP_SECRET, {
+      expiresIn: "1d",
+    });
+    req.token = token;
+    req.candidate = undefined;
+    next();
+  } catch (error) {
+    next(error);
+  }
+};
+
+//Verifie si l'utilisateur est connecte
+
+export default { verifyPassword, hashPassword, checkIfUserExists, createToken };
