@@ -6,12 +6,13 @@ declare global {
     interface Request {
       candidate?: {
         id: number;
-        firstname: string;
-        lastname: string;
-        email: string;
-        password: string;
+        // firstname: string;
+        // lastname: string;
+        // email: string;
+        // password: string;
       };
       token?: string;
+      cookie?: string;
     }
   }
 }

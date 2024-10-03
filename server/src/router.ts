@@ -16,7 +16,7 @@ router.get("/api/items/:id", itemActions.read);
 router.post("/api/items", itemActions.add);
 
 // Define ad-related routes
-router.get("/api/ads", adActions.browse);
+router.get("/api/ads", auth.VerifyToken, adActions.browse);
 router.get("/api/ads/:id", adActions.read);
 router.post("/api/ads", adActions.add);
 router.put("/api/ads/:id", adActions.edit);
@@ -31,7 +31,6 @@ router.delete("/api/candidates/:id", candidateActions.destroy);
 
 router.post(
   "/api/login",
-  auth.checkIfUserExists,
   auth.verifyPassword,
   auth.createToken,
   candidateActions.login,

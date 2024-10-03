@@ -15,31 +15,32 @@ const hashPassword: RequestHandler = async (req, res, next) => {
   }
 };
 
-const checkIfUserExists: RequestHandler = async (req, res, next) => {
-  try {
-    const candidate = await candidateRepository.readByEmail(req.body.email);
-    if (!candidate) {
-      return res.sendStatus(400);
-    }
-    req.candidate = candidate;
-    next();
-  } catch (error) {
-    next(error);
-  }
-};
+// const checkIfUserExists: RequestHandler = async (req, res, next) => {
+//   try {
+//     const candidate = await candidateRepository.readByEmail(req.body.email);
+//     if (!candidate) {
+//       return res.sendStatus(400);
+//     }
+//     req.candidate = candidate;
+//     next();
+//   } catch (error) {
+//     next(error);
+//   }
+// };
 
 const verifyPassword: RequestHandler = async (req, res, next) => {
   try {
+    const candidate = await candidateRepository.readByEmail(req.body.email);
+    if (!candidate) {
+      return res.status(400).send("L'email n'est pas dans la base de donnée");
+    }
     if (!req.body.password) {
       return res.status(400).send("Veuillez entrer votre mot de passe");
     }
-    if (!req.candidate) {
-      throw new Error();
-    }
-    const result = await argon2.verify(
-      req.candidate.password,
-      req.body.password,
-    );
+    req.candidate = {
+      id: candidate.id,
+    };
+    const result = await argon2.verify(candidate.password, req.body.password);
     if (!result) res.sendStatus(401);
     next();
   } catch (error) {
@@ -68,4 +69,30 @@ const createToken: RequestHandler = async (req, res, next) => {
 
 //Verifie si l'utilisateur est connecte
 
-export default { verifyPassword, hashPassword, checkIfUserExists, createToken };
+const VerifyToken: RequestHandler = async (req, res, next) => {
+  try {
+    if (!req.cookies.token) {
+      return res
+        .status(400)
+        .send("Vous devez vous identifier pour avoir accès à ce contenu");
+    }
+    if (!process.env.APP_SECRET) {
+      throw new Error();
+    }
+    const verifiedToken = await jwt.verify(
+      req.cookies.token,
+      process.env.APP_SECRET,
+    );
+    console.info("verified Token", verifiedToken);
+    next();
+  } catch (error) {
+    next(error);
+  }
+};
+
+export default {
+  verifyPassword,
+  hashPassword,
+  createToken,
+  VerifyToken,
+};

@@ -60,6 +60,9 @@ app.use(express.json());
 // app.use(express.raw());
 
 /* ************************************************************************* */
+//Cookies :  Install the cookie-parser module
+const cookieParser = require("cookie-parser");
+app.use(cookieParser());
 
 // Import the API router
 import router from "./router";
